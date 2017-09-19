@@ -31,10 +31,14 @@ module FastlaneCore
       return package_path
     end
 
+    def unique_ipa_path(ipa_path)
+      "#{File.basename(ipa_path, '.ipa')}_#{Digest::SHA256.file(ipa_path).hexdigest}.ipa"
+    end
+
     private
 
     def copy_ipa(ipa_path)
-      ipa_file_name = "#{File.basename(ipa_path, '.ipa')}_#{Digest::SHA256.file(ipa_path).hexdigest}.ipa"
+      ipa_file_name = unique_ipa_path(ipa_path)
       resulting_path = File.join(self.package_path, ipa_file_name)
       FileUtils.cp(ipa_path, resulting_path)
 
