@@ -27,8 +27,10 @@ module Fastlane
         # Enable readonly mode for match by default
         # we don't want to generate new identities and
         # profiles on Travis usually
-        UI.message("Enabling readonly mode for Travis")
-        ENV["MATCH_READONLY"] = true.to_s
+        if params[:readonly]
+          UI.message("Enabling readonly mode for Travis")
+        end
+        ENV["MATCH_READONLY"] = params[:readonly].to_s
       end
 
       #####################################################
@@ -54,7 +56,12 @@ module Fastlane
                                        env_name: "FL_SETUP_TRAVIS_FORCE",
                                        description: "Force setup, even if not executed by travis",
                                        is_string: false,
-                                       default_value: false)
+                                       default_value: false),
+          FastlaneCore::ConfigItem.new(key: :readonly,
+                                       env_name: "FL_SETUP_TRAVIS_READONLY",
+                                       description: "Set match to `readonly` mode",
+                                       is_string: false,
+                                       default_value: true)
         ]
       end
 

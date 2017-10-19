@@ -44,8 +44,10 @@ module Fastlane
           password: ""
         )
 
-        UI.message("Enabling match readonly mode.")
-        ENV["MATCH_READONLY"] = true.to_s
+        if params[:readonly]
+          UI.message("Enabling readonly mode for Travis")
+        end
+        ENV["MATCH_READONLY"] = params[:readonly].to_s
       end
 
       def self.should_run?(params)
@@ -76,7 +78,12 @@ module Fastlane
                                        env_name: "FL_SETUP_CIRCLECI_FORCE",
                                        description: "Force setup, even if not executed by CircleCI",
                                        is_string: false,
-                                       default_value: false)
+                                       default_value: false),
+          FastlaneCore::ConfigItem.new(key: :readonly,
+                                       env_name: "FL_SETUP_CIRCLECI_READONLY",
+                                       description: "Set match to `readonly` mode",
+                                       is_string: false,
+                                       default_value: true)
         ]
       end
 
