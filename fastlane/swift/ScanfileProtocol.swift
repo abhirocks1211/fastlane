@@ -45,7 +45,7 @@ extension ScanfileProtocol {
   var project: String? { return nil }
   var device: String? { return nil }
   var toolchain: String? { return nil }
-  var devices: [String] { return [] }
+  var devices: [String]? { return nil }
   var scheme: String? { return nil }
   var clean: Bool { return false }
   var codeCoverage: String? { return nil }

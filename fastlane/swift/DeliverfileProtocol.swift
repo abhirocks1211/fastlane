@@ -107,7 +107,7 @@ extension DeliverfileProtocol {
   var privacyUrl: String? { return nil }
   var supportUrl: String? { return nil }
   var marketingUrl: String? { return nil }
-  var languages: [String] { return [] }
+  var languages: [String]? { return nil }
   var ignoreLanguageDirectoryValidation: Bool { return false }
   var precheckIncludeInAppPurchases: Bool { return true }
 }

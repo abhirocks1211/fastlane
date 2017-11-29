@@ -89,7 +89,7 @@ module Fastlane
       if type_override == Array
         return "[String]"
       elsif type_override == Hash
-        return "[String : String]"
+        return "[String : Any]"
       elsif type_override == Integer
         return "Int"
       elsif type_override == :string_callback
@@ -102,7 +102,7 @@ module Fastlane
     def override_default_value_if_not_correct_type(param_type: nil, default_value: nil)
       return "[]" if param_type == "[String]" && default_value == ""
       return "{_ in }" if param_type == "((String) -> Void)"
-
+      return "[:]" if param_type == "[String: Any]"
       return default_value
     end
 
@@ -133,6 +133,8 @@ module Fastlane
           type = "Bool"
         elsif default_value.kind_of?(Array)
           type = "[String]"
+        elsif default_value.kind_of?(Hash)
+          type = "[String: Any]"
         end
 
         # sometimes we get to the point where we have a default value but its type is wrong
@@ -140,11 +142,8 @@ module Fastlane
         default_value = override_default_value_if_not_correct_type(param_type: type, default_value: default_value)
 
         unless default_value.nil?
-          if type == "Bool" || type == "[String]" || type == "Int" || type == "((String) -> Void)"
+          if type == "Bool" || type == "[String]" || type == "Int" || type == "((String) -> Void)" || type == "[String: Any]"
             default_value = " = #{default_value}"
-          elsif type == "[String : String]"
-            # we can't handle default values for Hashes, yet
-            default_value = ""
           else
             default_value = " = \"#{default_value}\""
           end
@@ -283,6 +282,7 @@ module Fastlane
         type = determine_type_from_override(type_override: param_type_override, default_type: default_type)
         if type != default_type
           type_overridden = true
+          type += '?' if optional && default_value.nil?
         end
 
         param = camel_case_lower(string: param)
@@ -297,11 +297,6 @@ module Fastlane
           end
         end
 
-        # if we don't have a default value, but the param is options, just set a default value to nil
-        if optional && !type_overridden
-          default_value ||= "nil"
-        end
-
         # if we don't have a default value still, we need to assign them based on type
         if type == "String"
           default_value ||= "\"\""
@@ -313,6 +308,11 @@ module Fastlane
 
         if type == "[String]"
           default_value ||= "[]"
+        end
+
+        # if we don't have a default value, but the param is options, just set a default value to nil
+        if optional
+          default_value ||= "nil"
         end
 
         "  var #{var_for_parameter_name}: #{type} { return #{default_value} }"

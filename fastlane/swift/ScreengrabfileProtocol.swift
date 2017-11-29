@@ -21,7 +21,7 @@ protocol ScreengrabfileProtocol: class {
 }
 
 extension ScreengrabfileProtocol {
-  var androidHome: String { return "/Users/liebowitz/Library/Android/sdk" }
+  var androidHome: String { return "/Users/ohayon/Library/Android/sdk" }
   var buildToolsVersion: String? { return nil }
   var locales: [String] { return ["en-US"] }
   var clearPreviousScreenshots: Bool { return false }
@@ -29,9 +29,9 @@ extension ScreengrabfileProtocol {
   var skipOpenSummary: Bool { return false }
   var appPackageName: String { return "" }
   var testsPackageName: String? { return nil }
-  var useTestsInPackages: [String] { return [] }
-  var useTestsInClasses: [String] { return [] }
-  var launchArguments: [String] { return [] }
+  var useTestsInPackages: [String]? { return nil }
+  var useTestsInClasses: [String]? { return nil }
+  var launchArguments: [String]? { return nil }
   var testInstrumentationRunner: String { return "android.support.test.runner.AndroidJUnitRunner" }
   var endingLocale: String { return "en-US" }
   var appApkPath: String? { return nil }
