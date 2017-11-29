@@ -57,57 +57,57 @@ protocol DeliverfileProtocol: class {
 
 extension DeliverfileProtocol {
   var username: String { return "" }
-  var appIdentifier: String { return "" }
+  var appIdentifier: String? { return "" }
   var app: String { return "" }
-  var editLive: Bool { return false }
-  var ipa: String { return "" }
-  var pkg: String { return "" }
-  var platform: String { return "ios" }
-  var metadataPath: String { return "" }
-  var screenshotsPath: String { return "" }
+  var editLive: Bool? { return false }
+  var ipa: String? { return "" }
+  var pkg: String? { return "" }
+  var platform: String? { return "ios" }
+  var metadataPath: String? { return "" }
+  var screenshotsPath: String? { return "" }
   var skipBinaryUpload: Bool { return false }
   var skipScreenshots: Bool { return false }
-  var appVersion: String { return "" }
+  var appVersion: String? { return "" }
   var skipMetadata: Bool { return false }
   var skipAppVersionUpdate: Bool { return false }
   var force: Bool { return false }
   var submitForReview: Bool { return false }
   var automaticRelease: Bool { return false }
-  var autoReleaseDate: String { return "" }
-  var phasedRelease: String { return "" }
-  var priceTier: String { return "" }
-  var buildNumber: String { return "" }
-  var appRatingConfigPath: String { return "" }
-  var submissionInformation: String { return "" }
-  var teamId: String { return "" }
-  var teamName: String { return "" }
-  var devPortalTeamId: String { return "" }
-  var devPortalTeamName: String { return "" }
-  var itcProvider: String { return "" }
+  var autoReleaseDate: String? { return "" }
+  var phasedRelease: String? { return "" }
+  var priceTier: String? { return "" }
+  var buildNumber: String? { return "" }
+  var appRatingConfigPath: String? { return "" }
+  var submissionInformation: String? { return "" }
+  var teamId: String? { return "" }
+  var teamName: String? { return "" }
+  var devPortalTeamId: String? { return "" }
+  var devPortalTeamName: String? { return "" }
+  var itcProvider: String? { return "" }
   var overwriteScreenshots: Bool { return false }
   var runPrecheckBeforeSubmit: Bool { return true }
   var precheckDefaultRuleLevel: String { return "warn" }
-  var appIcon: String { return "" }
-  var appleWatchAppIcon: String { return "" }
-  var copyright: String { return "" }
-  var primaryCategory: String { return "" }
-  var secondaryCategory: String { return "" }
-  var primaryFirstSubCategory: String { return "" }
-  var primarySecondSubCategory: String { return "" }
-  var secondaryFirstSubCategory: String { return "" }
-  var secondarySecondSubCategory: String { return "" }
-  var tradeRepresentativeContactInformation: String { return "" }
-  var appReviewInformation: String { return "" }
-  var description: String { return "" }
-  var name: String { return "" }
-  var subtitle: String { return "" }
-  var keywords: String { return "" }
-  var promotionalText: String { return "" }
-  var releaseNotes: String { return "" }
-  var privacyUrl: String { return "" }
-  var supportUrl: String { return "" }
-  var marketingUrl: String { return "" }
-  var languages: [String]? { return nil }
+  var appIcon: String? { return "" }
+  var appleWatchAppIcon: String? { return "" }
+  var copyright: String? { return "" }
+  var primaryCategory: String? { return "" }
+  var secondaryCategory: String? { return "" }
+  var primaryFirstSubCategory: String? { return "" }
+  var primarySecondSubCategory: String? { return "" }
+  var secondaryFirstSubCategory: String? { return "" }
+  var secondarySecondSubCategory: String? { return "" }
+  var tradeRepresentativeContactInformation: String? { return "" }
+  var appReviewInformation: String? { return "" }
+  var description: String? { return "" }
+  var name: String? { return "" }
+  var subtitle: String? { return "" }
+  var keywords: String? { return "" }
+  var promotionalText: String? { return "" }
+  var releaseNotes: String? { return "" }
+  var privacyUrl: String? { return "" }
+  var supportUrl: String? { return "" }
+  var marketingUrl: String? { return "" }
+  var languages: [String]? { return [] }
   var ignoreLanguageDirectoryValidation: Bool { return false }
-  var precheckIncludeInAppPurchases: Bool { return true }
+  var precheckIncludeInAppPurchases: Bool? { return true }
 }

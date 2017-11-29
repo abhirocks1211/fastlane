@@ -32,34 +32,34 @@ protocol SnapshotfileProtocol: class {
 }
 
 extension SnapshotfileProtocol {
-  var workspace: String { return "" }
-  var project: String { return "" }
-  var xcargs: String { return "" }
-  var devices: [String]? { return nil }
+  var workspace: String? { return "" }
+  var project: String? { return "" }
+  var xcargs: String? { return "" }
+  var devices: [String]? { return [] }
   var languages: [String] { return ["en-US"] }
   var launchArguments: [String] { return [""] }
   var outputDirectory: String { return "screenshots" }
-  var outputSimulatorLogs: Bool { return false }
-  var iosVersion: String { return "" }
+  var outputSimulatorLogs: Bool? { return false }
+  var iosVersion: String? { return "" }
   var skipOpenSummary: Bool { return false }
   var skipHelperVersionCheck: Bool { return false }
   var clearPreviousScreenshots: Bool { return false }
   var reinstallApp: Bool { return false }
   var eraseSimulator: Bool { return false }
   var localizeSimulator: Bool { return false }
-  var appIdentifier: String { return "" }
-  var addPhotos: [String]? { return nil }
-  var addVideos: [String]? { return nil }
+  var appIdentifier: String? { return "" }
+  var addPhotos: [String]? { return [] }
+  var addVideos: [String]? { return [] }
   var buildlogPath: String { return "~/Library/Logs/snapshot" }
   var clean: Bool { return false }
-  var configuration: String { return "" }
-  var xcprettyArgs: String { return "" }
-  var sdk: String { return "" }
-  var scheme: String { return "" }
+  var configuration: String? { return "" }
+  var xcprettyArgs: String? { return "" }
+  var sdk: String? { return "" }
+  var scheme: String? { return "" }
   var numberOfRetries: Int { return 1 }
   var stopAfterFirstError: Bool { return false }
-  var derivedDataPath: String { return "" }
-  var testTargetName: String { return "" }
-  var namespaceLogFiles: String { return "" }
+  var derivedDataPath: String? { return "" }
+  var testTargetName: String? { return "" }
+  var namespaceLogFiles: String? { return "" }
   var concurrentSimulators: Bool { return true }
 }

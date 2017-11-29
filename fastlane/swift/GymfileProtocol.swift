@@ -40,42 +40,42 @@ protocol GymfileProtocol: class {
 }
 
 extension GymfileProtocol {
-  var workspace: String { return "" }
-  var project: String { return "" }
-  var scheme: String { return "" }
+  var workspace: String? { return "" }
+  var project: String? { return "" }
+  var scheme: String? { return "" }
   var clean: Bool { return false }
   var outputDirectory: String { return "." }
-  var outputName: String { return "" }
-  var configuration: String { return "" }
+  var outputName: String? { return "" }
+  var configuration: String? { return "" }
   var silent: Bool { return false }
-  var codesigningIdentity: String { return "" }
+  var codesigningIdentity: String? { return "" }
   var skipPackageIpa: Bool { return false }
-  var includeSymbols: String { return "" }
-  var includeBitcode: String { return "" }
-  var exportMethod: String { return "" }
+  var includeSymbols: String? { return "" }
+  var includeBitcode: String? { return "" }
+  var exportMethod: String? { return "" }
   var exportOptions: [String : Any]? { return nil }
-  var exportXcargs: String { return "" }
-  var skipBuildArchive: String { return "" }
-  var skipArchive: String { return "" }
-  var buildPath: String { return "" }
-  var archivePath: String { return "" }
-  var derivedDataPath: String { return "" }
-  var resultBundle: String { return "" }
+  var exportXcargs: String? { return "" }
+  var skipBuildArchive: String? { return "" }
+  var skipArchive: String? { return "" }
+  var buildPath: String? { return "" }
+  var archivePath: String? { return "" }
+  var derivedDataPath: String? { return "" }
+  var resultBundle: String? { return "" }
   var buildlogPath: String { return "~/Library/Logs/gym" }
-  var sdk: String { return "" }
-  var toolchain: String { return "" }
-  var destination: String { return "" }
-  var exportTeamId: String { return "" }
-  var xcargs: String { return "" }
-  var xcconfig: String { return "" }
-  var suppressXcodeOutput: String { return "" }
-  var disableXcpretty: String { return "" }
-  var xcprettyTestFormat: String { return "" }
-  var xcprettyFormatter: String { return "" }
-  var xcprettyReportJunit: String { return "" }
-  var xcprettyReportHtml: String { return "" }
-  var xcprettyReportJson: String { return "" }
-  var analyzeBuildTime: String { return "" }
-  var xcprettyUtf: String { return "" }
-  var skipProfileDetection: Bool { return false }
+  var sdk: String? { return "" }
+  var toolchain: String? { return "" }
+  var destination: String? { return "" }
+  var exportTeamId: String? { return "" }
+  var xcargs: String? { return "" }
+  var xcconfig: String? { return "" }
+  var suppressXcodeOutput: String? { return "" }
+  var disableXcpretty: String? { return "" }
+  var xcprettyTestFormat: String? { return "" }
+  var xcprettyFormatter: String? { return "" }
+  var xcprettyReportJunit: String? { return "" }
+  var xcprettyReportHtml: String? { return "" }
+  var xcprettyReportJson: String? { return "" }
+  var analyzeBuildTime: String? { return "" }
+  var xcprettyUtf: String? { return "" }
+  var skipProfileDetection: Bool? { return false }
 }

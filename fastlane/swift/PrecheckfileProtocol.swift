@@ -11,9 +11,9 @@ protocol PrecheckfileProtocol: class {
 extension PrecheckfileProtocol {
   var appIdentifier: String { return "" }
   var username: String { return "" }
-  var teamId: String { return "" }
-  var teamName: String { return "" }
+  var teamId: String? { return "" }
+  var teamName: String? { return "" }
   var defaultRuleLevel: String { return "error" }
-  var includeInAppPurchases: Bool { return true }
-  var freeStuffInIap: String { return "" }
+  var includeInAppPurchases: Bool? { return true }
+  var freeStuffInIap: String? { return "" }
 }

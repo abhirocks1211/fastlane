@@ -279,12 +279,7 @@ module Fastlane
 
       swift_implementations = @param_names.zip(param_default_values, param_optionality_values, param_type_overrides).map do |param, default_value, optional, param_type_override|
         default_type = get_type(param: param, default_value: default_value, optional: optional)
-        type_overridden = false
-        type = determine_type_from_override(type_override: param_type_override, default_type: default_type)
-        if type != default_type
-          type_overridden = true
-          type += '?' if optional && default_value.nil?
-        end
+        type = determine_type_from_override(type_override: param_type_override, default_type: default_type, is_optional: optional)
 
         param = camel_case_lower(string: param)
         param = sanitize_reserved_word(word: param)
@@ -293,21 +288,23 @@ module Fastlane
         unless default_value.nil?
           if type == "Bool" || type == "[String]" || type == "Int" || default_value.kind_of?(Array)
             default_value = default_value.to_s
+          elsif type == "Bool?" || type == "[String]?" || type == "Int?"
+            default_value = default_value.to_s
           else
             default_value = "\"#{default_value}\""
           end
         end
 
         # if we don't have a default value still, we need to assign them based on type
-        if type == "String"
+        if type == "String" || type == "String?"
           default_value ||= "\"\""
         end
 
-        if type == "Bool"
+        if type == "Bool" || type == "Bool?"
           default_value ||= "false"
         end
 
-        if type == "[String]"
+        if type == "[String]" || type == "[String]?"
           default_value ||= "[]"
         end
 
