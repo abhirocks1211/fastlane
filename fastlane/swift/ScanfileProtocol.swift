@@ -3,7 +3,7 @@ protocol ScanfileProtocol: class {
   var project: String? { get }
   var device: String? { get }
   var toolchain: String? { get }
-  var devices: [String] { get }
+  var devices: [String]? { get }
   var scheme: String? { get }
   var clean: Bool { get }
   var codeCoverage: String? { get }
@@ -15,7 +15,7 @@ protocol ScanfileProtocol: class {
   var outputTypes: String { get }
   var outputFiles: String? { get }
   var buildlogPath: String { get }
-  var includeSimulatorLogs: Bool { get }
+  var includeSimulatorLogs: Bool? { get }
   var formatter: String? { get }
   var testWithoutBuilding: String? { get }
   var buildForTesting: String? { get }
@@ -41,43 +41,43 @@ protocol ScanfileProtocol: class {
 }
 
 extension ScanfileProtocol {
-  var workspace: String? { return nil }
-  var project: String? { return nil }
-  var device: String? { return nil }
-  var toolchain: String? { return nil }
+  var workspace: String { return "" }
+  var project: String { return "" }
+  var device: String { return "" }
+  var toolchain: String { return "" }
   var devices: [String]? { return nil }
-  var scheme: String? { return nil }
+  var scheme: String { return "" }
   var clean: Bool { return false }
-  var codeCoverage: String? { return nil }
-  var addressSanitizer: String? { return nil }
-  var threadSanitizer: String? { return nil }
+  var codeCoverage: String { return "" }
+  var addressSanitizer: String { return "" }
+  var threadSanitizer: String { return "" }
   var skipBuild: Bool { return false }
   var outputDirectory: String { return "./test_output" }
-  var outputStyle: String? { return nil }
+  var outputStyle: String { return "" }
   var outputTypes: String { return "html,junit" }
-  var outputFiles: String? { return nil }
+  var outputFiles: String { return "" }
   var buildlogPath: String { return "~/Library/Logs/scan" }
   var includeSimulatorLogs: Bool { return false }
-  var formatter: String? { return nil }
-  var testWithoutBuilding: String? { return nil }
-  var buildForTesting: String? { return nil }
-  var xctestrun: String? { return nil }
-  var derivedDataPath: String? { return nil }
-  var resultBundle: String? { return nil }
-  var sdk: String? { return nil }
+  var formatter: String { return "" }
+  var testWithoutBuilding: String { return "" }
+  var buildForTesting: String { return "" }
+  var xctestrun: String { return "" }
+  var derivedDataPath: String { return "" }
+  var resultBundle: String { return "" }
+  var sdk: String { return "" }
   var openReport: Bool { return false }
-  var configuration: String? { return nil }
-  var destination: String? { return nil }
-  var xcargs: String? { return nil }
-  var xcconfig: String? { return nil }
-  var onlyTesting: String? { return nil }
-  var skipTesting: String? { return nil }
-  var slackUrl: String? { return nil }
-  var slackChannel: String? { return nil }
-  var slackMessage: String? { return nil }
+  var configuration: String { return "" }
+  var destination: String { return "" }
+  var xcargs: String { return "" }
+  var xcconfig: String { return "" }
+  var onlyTesting: String { return "" }
+  var skipTesting: String { return "" }
+  var slackUrl: String { return "" }
+  var slackChannel: String { return "" }
+  var slackMessage: String { return "" }
   var skipSlack: Bool { return false }
   var slackOnlyOnFailure: Bool { return false }
   var useClangReportName: Bool { return false }
-  var customReportFileName: String? { return nil }
+  var customReportFileName: String { return "" }
   var failBuild: Bool { return true }
 }

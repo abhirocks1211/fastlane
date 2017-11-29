@@ -85,18 +85,23 @@ module Fastlane
       string.split('_').inject([]) { |buffer, e| buffer.push(buffer.empty? ? e : e.capitalize) }.join
     end
 
-    def determine_type_from_override(type_override: nil, default_type: nil)
+    def determine_type_from_override(type_override: nil, default_type: nil, is_optional: false)
+      type = default_type
       if type_override == Array
-        return "[String]"
+        type = "[String]"
       elsif type_override == Hash
-        return "[String : Any]"
+        type = "[String : Any]"
       elsif type_override == Integer
-        return "Int"
+        type = "Int"
       elsif type_override == :string_callback
-        return "((String) -> Void)"
-      else
-        return default_type
+        type = "((String) -> Void)"
       end
+
+      if is_optional
+        type += "?"
+      end
+
+      return type
     end
 
     def override_default_value_if_not_correct_type(param_type: nil, default_value: nil)
@@ -224,10 +229,6 @@ module Fastlane
   class ToolSwiftFunction < SwiftFunction
     def get_type(param: nil, default_value: nil, optional: nil)
       type = "String"
-      optional_specifier = ""
-
-      # if we are optional and don't have a default value, we'll need to use ?
-      optional_specifier = "?" if optional && default_value.nil?
 
       # If we have a default value of true or false, we can infer it is a Bool
       if default_value.class == FalseClass
@@ -241,7 +242,7 @@ module Fastlane
           type = "[String]"
         end
       end
-      return "#{type}#{optional_specifier}"
+      return type.to_s
     end
 
     def protocol_name
@@ -260,7 +261,7 @@ module Fastlane
       end
       swift_vars = @param_names.zip(param_default_values, param_optionality_values, param_type_overrides).map do |param, default_value, optional, param_type_override|
         type = get_type(param: param, default_value: default_value, optional: optional)
-        type = determine_type_from_override(type_override: param_type_override, default_type: type)
+        type = determine_type_from_override(type_override: param_type_override, default_type: type, is_optional: optional)
 
         param = camel_case_lower(string: param)
         param = sanitize_reserved_word(word: param)

@@ -30,20 +30,20 @@ extension MatchfileProtocol {
   var appIdentifier: [String] { return [] }
   var username: String { return "" }
   var keychainName: String { return "login.keychain" }
-  var keychainPassword: String? { return nil }
+  var keychainPassword: String { return "" }
   var readonly: Bool { return false }
-  var teamId: String? { return nil }
-  var gitFullName: String? { return nil }
-  var gitUserEmail: String? { return nil }
-  var teamName: String? { return nil }
+  var teamId: String { return "" }
+  var gitFullName: String { return "" }
+  var gitUserEmail: String { return "" }
+  var teamName: String { return "" }
   var verbose: Bool { return false }
   var force: Bool { return false }
   var skipConfirmation: Bool { return false }
   var shallowClone: Bool { return false }
   var cloneBranchDirectly: Bool { return false }
-  var workspace: String? { return nil }
+  var workspace: String { return "" }
   var forceForNewDevices: Bool { return false }
   var skipDocs: Bool { return false }
   var platform: String { return "ios" }
-  var templateName: String? { return nil }
+  var templateName: String { return "" }
 }
