@@ -194,6 +194,7 @@ module Snapshot
           UI.user_error!("We detected that you are running snapshot on Linux, but snapshot is only supported on macOS")
         when /freebsd/
           UI.user_error!("We detected that you are running snapshot on FreeBSD, but snapshot is only supported on macOS")
+        # TODO
         else
           if RbConfig::CONFIG['host_os'] =~ /darwin/
             (hwprefs_available? ? `hwprefs thread_count` : `sysctl -n hw.physicalcpu_max`).to_i
