@@ -7,7 +7,7 @@ module Fastlane
     class DownloadDsymsAction < Action
       # rubocop:disable Metrics/PerceivedComplexity
       def self.run(params)
-        require 'spaceship'
+        require_relative internal('spaceship')
         require 'net/http'
 
         UI.message("Login to iTunes Connect (#{params[:username]})")
