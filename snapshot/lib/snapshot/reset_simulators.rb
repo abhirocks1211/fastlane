@@ -1,3 +1,6 @@
+require 'fastlane_core/device_manager'
+require_relative 'module'
+
 module Snapshot
   class ResetSimulators
     def self.clear_everything!(ios_versions, force = false)
@@ -7,7 +10,7 @@ module Snapshot
 
       sure = true if FastlaneCore::Env.truthy?("SNAPSHOT_FORCE_DELETE") || force
       begin
-        sure = UI.confirm("Are you sure? All your simulators will be DELETED and new ones will be created!") unless sure
+        sure = UI.confirm("Are you sure? All your simulators will be DELETED and new ones will be created! (You can use `SNAPSHOT_FORCE_DELETE` to skip this confirmation)") unless sure
       rescue => e
         UI.user_error!("Please make sure to pass the `--force` option to reset simulators when running in non-interactive mode") unless UI.interactive?
         raise e
@@ -65,13 +68,15 @@ module Snapshot
 
     def self.create(device_type, os_versions, os_name = 'iOS')
       os_versions.each do |os_version|
-        puts "Creating #{device_type[0]} for #{os_name} version #{os_version[0]}"
-        `xcrun simctl create '#{device_type[0]}' #{device_type[1]} #{os_version[1]}`
+        puts("Creating #{device_type[0]} for #{os_name} version #{os_version[0]}")
+        command = "xcrun simctl create '#{device_type[0]}' #{device_type[1]} #{os_version[1]}"
+        UI.command(command) if FastlaneCore::Globals.verbose?
+        `#{command}`
       end
     end
 
     def self.filter_runtimes(all_runtimes, os = 'iOS', versions = [])
-      all_runtimes.select { |v, id| v[/^#{os}/] }.select { |v, id| v[/#{versions.join("|")}$/] }
+      all_runtimes.select { |v, id| v[/^#{os}/] }.select { |v, id| v[/#{versions.join("|")}$/] }.uniq
     end
 
     def self.devices
@@ -105,7 +110,7 @@ module Snapshot
       end
 
       if phones.any? && watches.any?
-        puts "Creating device pair of #{phones.last} and #{watches.last}"
+        puts("Creating device pair of #{phones.last} and #{watches.last}")
         Helper.backticks("xcrun simctl pair #{watches.last} #{phones.last}", print: FastlaneCore::Globals.verbose?)
       end
     end

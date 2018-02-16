@@ -1,4 +1,5 @@
-require 'snapshot/test_command_generator_base'
+require_relative 'test_command_generator_base'
+require_relative 'latest_os_version'
 
 module Snapshot
   # Responsible for building the fully working xcodebuild command
@@ -40,8 +41,12 @@ module Snapshot
 
         destinations = devices.map do |d|
           device = find_device(d, os_version)
-          UI.user_error!("No device found named '#{d}' for version '#{os_version}'") if device.nil?
-          "-destination 'platform=#{os} Simulator,name=#{device.name},OS=#{os_version}'"
+          if device.nil?
+            UI.user_error!("No device found named '#{d}' for version '#{os_version}'") if device.nil?
+          elsif device.os_version != os_version
+            UI.important("Using device named '#{device.name}' with version '#{device.os_version}' because no match was found for version '#{os_version}'")
+          end
+          "-destination 'platform=#{os} Simulator,name=#{device.name},OS=#{device.os_version}'"
         end
 
         return [destinations.join(' ')]
@@ -51,13 +56,21 @@ module Snapshot
         # Check each device to see if it is an iOS device
         all_ios = devices.map do |device|
           device = device.downcase
-          device.start_with?('iphone', 'ipad')
+          device.include?('iphone') || device.include?('ipad')
         end
         # Return true if all devices are iOS devices
         return true unless all_ios.include?(false)
+
+        all_tvos = devices.map do |device|
+          device = device.downcase
+          device.include?('apple tv')
+        end
+        # Return true if all devices are iOS devices
+        return true unless all_tvos.include?(false)
+
         # There should only be more than 1 device type if
-        # it is iOS, therefore, if there is more than 1
-        # device in the array, and they are not all iOS
+        # it is iOS or tvOS, therefore, if there is more than 1
+        # device in the array, and they are not all iOS or tvOS
         # as checked above, that would imply that this is a mixed bag
         return devices.count == 1
       end

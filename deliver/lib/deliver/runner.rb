@@ -1,4 +1,18 @@
-require 'precheck'
+require 'precheck/options'
+require 'precheck/runner'
+require 'fastlane_core/configuration/configuration'
+require 'fastlane_core/crash_reporter/crash_reporter'
+require 'fastlane_core/ipa_upload_package_builder'
+require 'fastlane_core/pkg_upload_package_builder'
+require 'fastlane_core/itunes_transporter'
+require 'spaceship'
+require_relative 'html_generator'
+require_relative 'submit_for_review'
+require_relative 'upload_assets'
+require_relative 'upload_price_tier'
+require_relative 'upload_metadata'
+require_relative 'upload_screenshots'
+require_relative 'detect_values'
 
 module Deliver
   class Runner
@@ -14,7 +28,6 @@ module Deliver
     end
 
     def login
-      UI.message("Running precheck before submitting to review, if you'd like to disable this check you can set run_precheck_before_submit to false") unless options[:run_precheck_before_submit] == false
       UI.message("Login to iTunes Connect (#{options[:username]})")
       Spaceship::Tunes.login(options[:username])
       Spaceship::Tunes.select_team
@@ -40,6 +53,7 @@ module Deliver
     # Make sure we pass precheck before uploading
     def precheck_app
       return true unless options[:run_precheck_before_submit]
+      UI.message("Running precheck before submitting to review, if you'd like to disable this check you can set run_precheck_before_submit to false")
 
       if options[:submit_for_review]
         UI.message("Making sure we pass precheck 👮‍♀️ 👮 before we submit  🛫")
@@ -49,6 +63,7 @@ module Deliver
 
       precheck_options = {
         default_rule_level: options[:precheck_default_rule_level],
+        include_in_app_purchases: options[:precheck_include_in_app_purchases],
         app_identifier: options[:app_identifier],
         username: options[:username]
       }

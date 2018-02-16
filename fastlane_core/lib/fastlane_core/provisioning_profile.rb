@@ -1,3 +1,5 @@
+require_relative 'ui/ui'
+
 module FastlaneCore
   class ProvisioningProfile
     class << self
@@ -35,6 +37,11 @@ module FastlaneCore
       # @return [String] The UUID of the given provisioning profile
       def uuid(path)
         parse(path).fetch("UUID")
+      end
+
+      # @return [String] The Name of the given provisioning profile
+      def name(path)
+        parse(path).fetch("Name")
       end
 
       def profiles_path

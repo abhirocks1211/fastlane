@@ -1,5 +1,12 @@
+require 'fastlane_core/command_executor'
+require_relative 'module'
+require_relative 'change_password'
+require_relative 'encrypt'
+
 module Match
   class GitHelper
+    MATCH_VERSION_FILE_NAME = "match_version.txt"
+
     def self.clone(git_url,
                    shallow_clone,
                    manual_password: nil,
@@ -25,7 +32,7 @@ module Match
         command += " -b #{branch.shellescape} --single-branch"
       end
 
-      UI.message "Cloning remote git repo..."
+      UI.message("Cloning remote git repo...")
 
       if branch && !clone_branch_directly
         UI.message("If cloning the repo takes too long, you can use the `clone_branch_directly` option in match.")
@@ -53,7 +60,7 @@ module Match
       checkout_branch(branch) unless branch == "master"
 
       if !Helper.test? and GitHelper.match_version(@dir).nil? and manual_password.nil? and File.exist?(File.join(@dir, "README.md"))
-        UI.important "Migrating to new match..."
+        UI.important("Migrating to new match...")
         ChangePassword.update(params: { git_url: git_url,
                                     git_branch: branch,
                                  shallow_clone: shallow_clone },
@@ -62,7 +69,6 @@ module Match
         return self.clone(git_url, shallow_clone)
       end
 
-      copy_readme(@dir) unless skip_docs
       Encrypt.new.decrypt_repo(path: @dir, git_url: git_url, manual_password: manual_password)
 
       return @dir
@@ -80,25 +86,49 @@ module Match
     end
 
     def self.match_version(workspace)
-      path = File.join(workspace, "match_version.txt")
+      path = File.join(workspace, MATCH_VERSION_FILE_NAME)
       if File.exist?(path)
         Gem::Version.new(File.read(path))
       end
     end
 
-    def self.commit_changes(path, message, git_url, branch = "master")
+    def self.commit_changes(path, message, git_url, branch = "master", files_to_commmit = nil)
+      files_to_commmit ||= []
       Dir.chdir(path) do
         return if `git status`.include?("nothing to commit")
 
         Encrypt.new.encrypt_repo(path: path, git_url: git_url)
-        File.write("match_version.txt", Fastlane::VERSION) # unencrypted
-
         commands = []
-        commands << "git add -A"
+
+        if files_to_commmit.count > 0 # e.g. for nuke this is treated differently
+          if !File.exist?(MATCH_VERSION_FILE_NAME) || File.read(MATCH_VERSION_FILE_NAME) != Fastlane::VERSION.to_s
+            files_to_commmit << MATCH_VERSION_FILE_NAME
+            File.write(MATCH_VERSION_FILE_NAME, Fastlane::VERSION) # stored unencrypted
+          end
+
+          template = File.read("#{Match::ROOT}/lib/assets/READMETemplate.md")
+          readme_path = "README.md"
+          if !File.exist?(readme_path) || File.read(readme_path) != template
+            files_to_commmit << readme_path
+            File.write(readme_path, template)
+          end
+
+          # `git add` each file we want to commit
+          #   - Fixes https://github.com/fastlane/fastlane/issues/8917
+          #   - Fixes https://github.com/fastlane/fastlane/issues/8793
+          #   - Replaces, closes and fixes https://github.com/fastlane/fastlane/pull/8919
+          commands += files_to_commmit.map do |current_file|
+            "git add #{current_file.shellescape}"
+          end
+        else
+          # No specific list given, e.g. this happens on `fastlane match nuke`
+          # We just want to run `git add -A` to commit everything
+          commands << "git add -A"
+        end
         commands << "git commit -m #{message.shellescape}"
         commands << "GIT_TERMINAL_PROMPT=0 git push origin #{branch.shellescape}"
 
-        UI.message "Pushing changes to remote git repo..."
+        UI.message("Pushing changes to remote git repo...")
 
         commands.each do |command|
           FastlaneCore::CommandExecutor.execute(command: command,
@@ -135,7 +165,7 @@ module Match
         commands << "git reset --hard"
       end
 
-      UI.message "Checking out branch #{branch}..."
+      UI.message("Checking out branch #{branch}...")
 
       Dir.chdir(@dir) do
         commands.each do |command|
@@ -151,17 +181,11 @@ module Match
       return unless @dir
 
       result = Dir.chdir(@dir) do
-        FastlaneCore::CommandExecutor.execute(command: "git branch --list origin/#{branch.shellescape} --no-color -r",
+        FastlaneCore::CommandExecutor.execute(command: "git --no-pager branch --list origin/#{branch.shellescape} --no-color -r",
                                               print_all: FastlaneCore::Globals.verbose?,
                                               print_command: FastlaneCore::Globals.verbose?)
       end
       return !result.empty?
-    end
-
-    # Copies the README.md into the git repo
-    def self.copy_readme(directory)
-      template = File.read("#{Match::ROOT}/lib/assets/READMETemplate.md")
-      File.write(File.join(directory, "README.md"), template)
     end
 
     def self.add_user_config(user_name, user_email)
@@ -172,7 +196,7 @@ module Match
 
       return if commands.empty?
 
-      UI.message "Add git user config to local git repo..."
+      UI.message("Add git user config to local git repo...")
       Dir.chdir(@dir) do
         commands.each do |command|
           FastlaneCore::CommandExecutor.execute(command: command,

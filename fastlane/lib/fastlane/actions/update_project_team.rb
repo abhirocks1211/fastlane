@@ -32,12 +32,14 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :path,
                                        env_name: "FL_PROJECT_SIGNING_PROJECT_PATH",
                                        description: "Path to your Xcode project",
+                                       default_value: Dir['*.xcodeproj'].first,
                                        verify_block: proc do |value|
                                          UI.user_error!("Path is invalid") unless File.exist?(value)
                                        end),
           FastlaneCore::ConfigItem.new(key: :teamid,
                                        env_name: "FL_PROJECT_TEAM_ID",
                                        description: "The Team ID you want to use",
+                                       code_gen_sensitive: true,
                                        default_value: ENV["TEAM_ID"] || CredentialsManager::AppfileConfig.try_fetch_value(:team_id))
         ]
       end
@@ -52,6 +54,7 @@ module Fastlane
 
       def self.example_code
         [
+          'update_project_team',
           'update_project_team(
             path: "Example.xcodeproj",
             teamid: "A3ZZVJ7CNY"

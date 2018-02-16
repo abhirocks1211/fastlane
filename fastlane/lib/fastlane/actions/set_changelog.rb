@@ -30,7 +30,7 @@ module Fastlane
         unless changelog
           path = default_changelog_path
           UI.message("Looking for changelog in '#{path}'...")
-          if File.exist? path
+          if File.exist?(path)
             changelog = File.read(path)
           else
             UI.error("Couldn't find changelog.txt")
@@ -60,6 +60,8 @@ module Fastlane
         v.release_notes.languages.each do |lang|
           v.release_notes[lang] = changelog
         end
+
+        UI.message("Found and updated changelog for the following languages: #{v.release_notes.languages.join(', ')}")
         UI.message("Uploading changes to iTunes Connect...")
         v.save!
 
@@ -81,7 +83,8 @@ module Fastlane
       def self.details
         [
           "This is useful if you have only one changelog for all languages.",
-          "You can store the changelog in `#{default_changelog_path}` and it will automatically get loaded from there. This integration is useful if you support e.g. 10 languages and want to use the same \"What's new\"-text for all languages."
+          "You can store the changelog in `#{default_changelog_path}` and it will automatically get loaded from there. This integration is useful if you support e.g. 10 languages and want to use the same \"What's new\"-text for all languages.",
+          "Defining the version is optional, fastlane will try to automatically detect it if you don't provide one"
         ].join("\n")
       end
 
@@ -94,6 +97,7 @@ module Fastlane
                                      short_option: "-a",
                                      env_name: "FASTLANE_APP_IDENTIFIER",
                                      description: "The bundle identifier of your app",
+                                     code_gen_sensitive: true,
                                      default_value: CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)),
           FastlaneCore::ConfigItem.new(key: :username,
                                      short_option: "-u",
@@ -114,6 +118,7 @@ module Fastlane
                                        description: "The ID of your iTunes Connect team if you're in multiple teams",
                                        optional: true,
                                        is_string: false, # as we also allow integers, which we convert to strings anyway
+                                       code_gen_sensitive: true,
                                        default_value: CredentialsManager::AppfileConfig.try_fetch_value(:itc_team_id),
                                        verify_block: proc do |value|
                                          ENV["FASTLANE_ITC_TEAM_ID"] = value.to_s
@@ -123,6 +128,7 @@ module Fastlane
                                        env_name: "FL_SET_CHANGELOG_TEAM_NAME",
                                        description: "The name of your iTunes Connect team if you're in multiple teams",
                                        optional: true,
+                                       code_gen_sensitive: true,
                                        default_value: CredentialsManager::AppfileConfig.try_fetch_value(:itc_team_name),
                                        verify_block: proc do |value|
                                          ENV["FASTLANE_ITC_TEAM_NAME"] = value.to_s
@@ -135,12 +141,13 @@ module Fastlane
       end
 
       def self.is_supported?(platform)
-        [:ios, :mac].include? platform
+        [:ios, :mac].include?(platform)
       end
 
       def self.example_code
         [
-          'set_changelog(app_identifier: "com.krausefx.app", version: "1.0", changelog: "All Languages")'
+          'set_changelog(changelog: "Changelog for all Languages")',
+          'set_changelog(app_identifier: "com.krausefx.app", version: "1.0", changelog: "Changelog for all Languages")'
         ]
       end
 
